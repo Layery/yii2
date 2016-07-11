@@ -9,7 +9,7 @@ use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
 use yii\db\Query;
-
+use frontend\models\ContactForm;
 /**
  * Site controller
  */
@@ -113,7 +113,7 @@ class SiteController extends Controller
      */
     public function actionContact()
     {
-        $model = new ContactForm();
+        /*$model = new ContactForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
                 Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
@@ -126,7 +126,37 @@ class SiteController extends Controller
             return $this->render('contact', [
                 'model' => $model,
             ]);
+        }*/
+
+
+
+        $model=new ContactForm;
+
+        $model->onSendMail=function($event) {
+            $headers="From: {$event->sender->email}\r\nReply-To: {$event->sender->email}";
+            mail(Yii::app()->params['adminEmail'],$event->sender->subject,$event->sender->body,$headers);
+        };
+
+        if(isset($_POST['ContactForm']))
+        {
+            $model->attributes=$_POST['ContactForm'];
+            if($model->validate())
+            {
+
+                Yii::app()->user->setFlash('contact','Thank you for contacting us. We will respond to you as soon as possible.');
+                $this->refresh();
+            }
         }
+        $this->render('contact',array('model'=>$model));
+
+
+
+
+
+
+
+
+
     }
 
     /**

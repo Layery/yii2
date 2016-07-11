@@ -39,11 +39,10 @@ class RoomController extends Controller
     {
 
         $dataProvider = new ActiveDataProvider(['query'=>Room::find()->asArray()]);
+
+
         return $this->render('index', [
             'dataProvider' => $dataProvider,
-            'pagination' => [
-                'pageSize' => 1,
-             ],
         ]);
 
     }
@@ -61,35 +60,36 @@ class RoomController extends Controller
     }
 
     /**
-     * Creates a new Room model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
+     * 新增班级
+     * @param  [type] $id [description]
+     * @return [type]     [description]
      */
     public function actionCreate()
     {
         $model = new Room();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
+        if (isset($_POST['room'])) {
+            $model->attributes = $_POST['room'];
+            if ($model->save()) {
+               return $this->redirect(['index']);
+            } 
+        } 
+        
+        echo $this->render('create');
     }
 
+    
+
     /**
-     * Updates an existing Room model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param string $id
-     * @return mixed
+     * 修改班级
+     * @param  [type] $id [description]
+     * @return [type]     [description]
      */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -97,17 +97,21 @@ class RoomController extends Controller
         }
     }
 
+    
     /**
-     * Deletes an existing Room model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param string $id
-     * @return mixed
+     * 删除班级
+     * @param  [type] $id [description]
+     * @return [type]     [description]
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        $model = Room::findOne($id);
+        if ($model) {
+            $model->delete();
+            $this->redirect(['index']);
+        } else {
+            exit('参数有误');
+        }
     }
 
     /**

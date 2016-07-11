@@ -27,8 +27,6 @@ class Room extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['s_number'], 'required'],
-            [['s_number'], 'integer'],
             [['name'], 'string', 'max' => 200],
         ];
     }
@@ -39,9 +37,9 @@ class Room extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'name' => 'Name',
-            's_number' => 'S Number',
+            'id' => '班级ID',
+            'name' => '班级名称',
+            's_number' => '学生数量',
         ];
     }
 }

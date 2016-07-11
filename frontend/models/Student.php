@@ -48,13 +48,37 @@ class Student extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
-            'sex' => 'Sex',
+            'name' => '姓名',
+            'sex' => '性别',
             'age' => 'Age',
-            'qq' => 'Qq',
+            'qq' => 'QQ',
             'mobile' => 'Mobile',
             'email' => 'Email',
-            'c_id' => 'C ID',
+            'c_id' => '所属班级',
         ];
     }
+
+
+    public function afterSave()
+    {
+        $rs = $this->isNewRecord();
+        p($rs);
+
+        if ($rs == NULL) {
+            $room = Room::findOne($this->c_id);
+
+            $room->s_number += 1;
+            $room->save();
+        }
+    }
+
+
+
+
+
+
+
+
+
+
 }

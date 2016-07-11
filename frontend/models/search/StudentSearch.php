@@ -62,7 +62,9 @@ class StudentSearch extends Student
             'id' => $this->id,
             'age' => $this->age,
             'c_id' => $this->c_id,
+            
         ]);
+
 
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'sex', $this->sex])

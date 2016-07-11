@@ -4,6 +4,7 @@ namespace frontend\controllers;
 
 use Yii;
 use frontend\models\Student;
+use frontend\models\Room;
 use frontend\models\search\StudentSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -29,13 +30,15 @@ class StudentController extends Controller
         ];
     }
 
+    
     /**
-     * Lists all Student models.
-     * @return mixed
+     * 展示学生列表
+     * @return [type] [description]
      */
     public function actionIndex()
     {
         $searchModel = new StudentSearch();
+
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -55,21 +58,19 @@ class StudentController extends Controller
         ]);
     }
 
+    
     /**
-     * Creates a new Student model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
+     * 新增学生
+     * @return [type] [description]
      */
     public function actionCreate()
     {
         $model = new Student();
-
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['room/index']);
         } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+            $room = Room::find()->asArray()->all();
+            return $this->render('create',['model'=>$model,'room'=>$room]);
         }
     }
 
@@ -81,13 +82,18 @@ class StudentController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $model = Student::findOne($id);
+        if (isset($_POST['Student'])) {
+            $model->attributes = $_POST['Student'];
+            if ($model->validator()) {
+                $model->update();
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         } else {
+            $room = Room::find()->asArray()->all();
             return $this->render('update', [
                 'model' => $model,
+                'room' => $room,
             ]);
         }
     }

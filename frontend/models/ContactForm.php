@@ -57,4 +57,28 @@ class ContactForm extends Model
             ->setTextBody($this->body)
             ->send();
     }
+
+
+    /**
+     * 自己定义发送邮件事件
+     * @param unknown_type $event
+     */
+    public function onSendMail($event)
+    {
+        $this->raiseEvent('onSendMail',$event);
+    }
+
+
+
+    /**
+     * 验证成功，执行
+     * @see CModel::afterValidate()
+     */
+    public function afterValidate() 
+    {
+        if($this->hasEventHandler('onSendMail'))
+            $this->onSendMail(new CEvent($this));
+    }
+
+
 }
