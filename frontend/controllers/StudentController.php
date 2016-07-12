@@ -87,11 +87,15 @@ class StudentController extends Controller
         $model = Student::findOne($id);
         if (isset($_POST['Student'])) {
             $model->attributes = $_POST['Student'];
-            if ($model->validator()) {
+            if ($model->validate()) {
                 $model->update();
+
                 return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                p($model->getErrors());
             }
         } else {
+            // exit('fase');
             $room = Room::find()->asArray()->all();
             return $this->render('update', [
                 'model' => $model,

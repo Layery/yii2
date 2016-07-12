@@ -60,18 +60,10 @@ class Student extends \yii\db\ActiveRecord
     }
 
 
-    public function afterSave()
+    public function afterSave($insert)
     {
-
-        p($this->isNewRecord);
+        p($this->getIsNewRecord());
         
-
-        if ($rs == NULL) {
-            $room = Room::findOne($this->c_id);
-
-            $room->s_number += 1;
-            $room->save();
-        }
     }
 
 
