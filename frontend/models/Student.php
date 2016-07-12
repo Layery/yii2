@@ -32,7 +32,8 @@ class Student extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'sex', 'age', 'qq', 'mobile', 'email', 'c_id'], 'required'],
+            // [['name', 'sex', 'age', 'qq', 'mobile', 'email', 'c_id'], 'required'],
+            [['name', 'c_id'], 'required'],
             [['age', 'c_id'], 'integer'],
             [['name', 'qq'], 'string', 'max' => 20],
             [['sex'], 'string', 'max' => 1],
@@ -61,8 +62,9 @@ class Student extends \yii\db\ActiveRecord
 
     public function afterSave()
     {
-        $rs = $this->isNewRecord();
-        p($rs);
+
+        p($this->isNewRecord);
+        
 
         if ($rs == NULL) {
             $room = Room::findOne($this->c_id);

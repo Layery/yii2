@@ -40,6 +40,9 @@ class Room extends \yii\db\ActiveRecord
             'id' => '班级ID',
             'name' => '班级名称',
             's_number' => '学生数量',
+            'test_event' => 'event测试',
         ];
     }
+
+
 }

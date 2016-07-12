@@ -66,6 +66,8 @@ class StudentController extends Controller
     public function actionCreate()
     {
         $model = new Student();
+
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['room/index']);
         } else {
