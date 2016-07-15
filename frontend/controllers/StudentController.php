@@ -67,6 +67,12 @@ class StudentController extends Controller
     {
         $model = new Student();
 
+        // $rs = $model->load(Yii::$app->request->post());
+        // p($model->getAttributes());
+        // p($model-save());
+        // // $rs = $model->save();
+
+        // p($rs);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['room/index']);
@@ -88,7 +94,7 @@ class StudentController extends Controller
         if (isset($_POST['Student'])) {
             $model->attributes = $_POST['Student'];
             if ($model->validate()) {
-                $model->update();
+                $model->save();
 
                 return $this->redirect(['view', 'id' => $model->id]);
             } else {
@@ -112,8 +118,13 @@ class StudentController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $room = new Room;
 
+        $student = $this->findModel($id);
+        $student->delete();
+
+        $this->on('updateRoom',[$room,'updateStudentNumber'],$student);
+        $this->trigger('updateRoom');
         return $this->redirect(['index']);
     }
 

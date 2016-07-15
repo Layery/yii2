@@ -2,14 +2,17 @@
 namespace frontend\controllers;
 
 use Yii;
-use app\models\Room;
+use frontend\models\Room;
 use frontend\models\Student;
+use frontend\behavior\MyBehavior;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
 use yii\db\Query;
 use frontend\models\ContactForm;
+
+
 /**
  * Site controller
  */
@@ -84,7 +87,7 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
-        $model = new LoginForm();
+        $model = new SignupForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         } else {
@@ -113,7 +116,7 @@ class SiteController extends Controller
      */
     public function actionContact()
     {
-        /*$model = new ContactForm();
+        $model = new ContactForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
                 Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
@@ -126,37 +129,25 @@ class SiteController extends Controller
             return $this->render('contact', [
                 'model' => $model,
             ]);
-        }*/
-
-
-
-        $model=new ContactForm;
-
-        $model->onSendMail=function($event) {
-            $headers="From: {$event->sender->email}\r\nReply-To: {$event->sender->email}";
-            mail(Yii::app()->params['adminEmail'],$event->sender->subject,$event->sender->body,$headers);
-        };
-
-        if(isset($_POST['ContactForm']))
-        {
-            $model->attributes=$_POST['ContactForm'];
-            if($model->validate())
-            {
-
-                Yii::app()->user->setFlash('contact','Thank you for contacting us. We will respond to you as soon as possible.');
-                $this->refresh();
-            }
         }
-        $this->render('contact',array('model'=>$model));
+        // $model=new ContactForm;
 
+        // $model->onSendMail=function($event) {
+        //     $headers="From: {$event->sender->email}\r\nReply-To: {$event->sender->email}";
+        //     mail(Yii::app()->params['adminEmail'],$event->sender->subject,$event->sender->body,$headers);
+        // };
 
+        // if(isset($_POST['ContactForm']))
+        // {
+        //     $model->attributes=$_POST['ContactForm'];
+        //     if($model->validate())
+        //     {
 
-
-
-
-
-
-
+        //         Yii::app()->user->setFlash('contact','Thank you for contacting us. We will respond to you as soon as possible.');
+        //         $this->refresh();
+        //     }
+        // }
+        // $this->render('contact',array('model'=>$model));
     }
 
     /**
@@ -238,4 +229,64 @@ class SiteController extends Controller
             'model' => $model,
         ]);
     }
+
+    // 测试事件
+    public function actionTest()
+    {
+        $person = new Student(); // backendmodelsPerson;
+        $this->on('111','hello','111111111'); // 全局函数，定义在入口文件index.php中
+
+        $this->on('222',[$person,'say_bye']); // 对象
+        $this->on('333',['room','say_hello']); // 类
+        $this->on('444',function(){
+        return '444444444'.'<br/>';
+        }); //匿名函数
+
+
+        // $this->trigger('333');
+        $this->trigger('444');
+        $rs = $this->trigger('111'); //触发事件
+        $this->trigger('222'); //触发事件
+        // $this->trigger('333'); //触发事件
+        // $this->trigger('444'); //触发匿名事件
+
+        echo $this->renderContent('');
+
+
+
+    }
+
+    // 测试行为 1 
+    public function actionBehavior()
+    {
+
+        $room = new Room();
+
+        $behavior = new MyBehavior;
+
+
+
+        $room->attachBehavior('behaviorTest',$behavior);
+
+        echo $this->render('MyBehavior',['model'=>$room]);
+
+
+    }
+
+
+    // 测试行为 2 
+    public function actionBehaviorsec()
+    {
+        $behavior = new MyBehavior();
+        $room = new Room;
+
+        p(get_class_methods($behavior));
+        p($behavior);
+
+    }
+
+
+
 }
+
+

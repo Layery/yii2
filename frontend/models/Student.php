@@ -60,12 +60,23 @@ class Student extends \yii\db\ActiveRecord
     }
 
 
+
+
+
+
     public function afterSave($insert)
     {
-        p($this->getIsNewRecord());
-        
+        if ($insert) {
+            $room = Room::findOne($this->c_id);
+            $room->s_number += 1;
+            $room->save();
+        }  
     }
 
+
+    public function say_bye() {
+        return '我是事件';
+    }
 
 
 

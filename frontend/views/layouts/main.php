@@ -38,7 +38,9 @@ AppAsset::register($this);
         ['label' => 'Class', 'url' => ['/room/index']],
         ['label' => 'Student', 'url' => ['/student/index']],
         ['label' => 'Home', 'url' => ['/site/index']],
-        ['label' => 'Event', 'url' => ['/event/index']],
+        ['label' => 'Event', 'url' => ['/site/test']],
+        ['label' => 'Behavior', 'url' => ['/site/behavior']],
+        ['label' => 'BehaviorSec', 'url' => ['/site/behaviorsec']],
         ['label' => 'Contact', 'url' => ['/site/contact']],
     ];
     if (Yii::$app->user->isGuest) {
